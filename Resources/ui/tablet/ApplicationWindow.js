@@ -1,20 +1,22 @@
 function ApplicationWindow() {
 	//declare module dependencies
-	var MasterView = require('ui/common/MasterView'),
-		DetailView = require('ui/common/DetailView');
-		
+	var CurrencyView = require('ui/common/currencyView'),
+	    PinBarView = require('ui/common/pinbarView');
+	    CommentaryView = require('ui/common/commentaryView');
+
 	//create object instance
 	var self = Ti.UI.createWindow({
 		backgroundColor:'#ffffff'
 	});
-		
+
 	//construct UI
-	var masterView = new MasterView(),
-		detailView = new DetailView();
-		
-	masterView.borderColor = '#000';
-	masterView.borderWidth = 1;
-		
+	var currencyView = new CurrencyView(),
+            pinBarView = new PinBarView();
+            commenatryView = new CommentaryView();
+
+	currencyView.borderColor = '#000';
+	currencyView.borderWidth = 1;
+
 	//create master view container
 	var masterContainer = Ti.UI.createView({
 		top:0,
@@ -22,25 +24,25 @@ function ApplicationWindow() {
 		left:0,
 		width:240
 	});
-	masterContainer.add(masterView);
+	masterContainer.add(currencyView);
 	self.add(masterContainer);
-	
+
 	//create detail view container
 	var detailContainer = Ti.UI.createView({
 		top:0,
 		bottom:0,
 		right:0,
-		left:240
+		left:240,
+		layout: "vertical"
 	});
-	detailContainer.add(detailView);
+	detailContainer.add(pinBarView);
+	detailContainer.add(commentaryView);
 	self.add(detailContainer);
-	
+
 	//add behavior for master view
-	masterView.addEventListener('itemSelected', function(e) {
-		detailView.fireEvent('itemSelected',e);
+	currencyView.addEventListener('currencySelected', function(e) {
+		pinBarView.fireEvent('currencySelected',e);
 	});
-	
+
 	return self;
 };
-
-module.exports = ApplicationWindow;
