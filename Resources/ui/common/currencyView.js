@@ -3,7 +3,7 @@ function CurrenciesView() {
   //create vertical layout for the tableview
 	var vertLayout = Ti.UI.createView({layout:'vertical'});
         
-  var currencyCommon = require('common/currencycommon');
+  var currencyCommon = require('/currencycommon');
 	var stockList = Ti.UI.createTableView({data: currencyCommon.populateTableWithPairs()});
 	
 	//stockList.addEventListener('click', function(e) {showPinBar(e)});
@@ -17,7 +17,11 @@ function CurrenciesView() {
 			rate:e.rowData.rate
 		});
 	});
-
+    
+    vertLayout.addEventListener('RefreshCurrenices', function(e) {
+    	stockList.setData(e.data);
+    });
+    
 	return vertLayout;
 };
 module.exports = CurrenciesView;

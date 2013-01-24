@@ -61,30 +61,32 @@ function pinBarView() {
         }
         
         function computeEntryParams(_args) {
-            var rr = require('common/riskreward');
-            var retrace = rr.determineRetracement({pair          : pair,
+            var rr = require('/riskreward');
+            console.log('computeEntryParams');
+            if (pair) {
+               var retrace = rr.determineRetracement({pair          : pair,
                                                       retracement   : _args.retracement,
                                                       top           : iPBTop.value,
                                                       bottom        : iPBBtm.value,
                                                       bull          : bull});
-            pb.entryLbl.text = retrace;
+              pb.entryLbl.text = retrace;
 
-            pb.lotSizeLbl.text = rr.calculatePositionSize({
-                                                     pair            : pair,
-                                                     risk            : 50,
-                                                     stopLoss        : iStopLoss.value,
-                                                     entryPoint      : retrace
-                                                     });  
+              pb.lotSizeLbl.text = rr.calculatePositionSize({
+                                                      pair            : pair,
+                                                      risk            : 50,
+                                                      stopLoss        : iStopLoss.value,
+                                                      entryPoint      : retrace
+                                                      });  
                                                      
-            pb.takeProfitLbl.text = rr.calculateNxRiskReward({
-                                                     pair            : pair,
-                                                     RR              : 2,
-                                                     stopLoss        : iStopLoss.value,
-                                                     entryPoint      : retrace
-                                                     });  
+             pb.takeProfitLbl.text = rr.calculateNxRiskReward({
+                                                      pair            : pair,
+                                                      RR              : 2,
+                                                      stopLoss        : iStopLoss.value,
+                                                      entryPoint      : retrace
+                                                      });  
 
-            updateEntryPointIndicator(_args);
-
+             updateEntryPointIndicator(_args);
+           }
         }
         
         function updateEntryPointIndicator(_args) {

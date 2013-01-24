@@ -46,13 +46,14 @@ exports.addCommentary = addCommentary;
 
 // The last three bits of commentary - for the iPad version, on the front screen
 function getLast3Comments(_args) {
-
+	
 	Cloud.Objects.query({
 	    classname: className,
 	    limit:     3,
 	    order :    '-created_at'
 	}, function (e) {
 	    if (e.success) {
+	    	console.log('Back from ACS with '+JSON.stringify(e));
 	        _args.success(e.forexCommentary);
 	    } else {
 		    _args.error({error: e.error});

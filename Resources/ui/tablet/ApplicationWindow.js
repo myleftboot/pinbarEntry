@@ -12,7 +12,7 @@ function ApplicationWindow() {
 	//construct UI
 	var currencyView = new CurrencyView(),
             pinBarView = new PinBarView();
-            commenatryView = new CommentaryView();
+            commentaryView = new CommentaryView();
 
 	currencyView.borderColor = '#000';
 	currencyView.borderWidth = 1;
@@ -44,7 +44,14 @@ function ApplicationWindow() {
 	//add behavior for master view
 	currencyView.addEventListener('currencySelected', function(e) {
 		pinBarView.fireEvent('currencySelected',e);
+		commentaryView.fireEvent('currencySelected', e);
 	});
-
+	currencyView.addEventListener('currencyRefresh', function(e) {
+		currencyView.fireEvent('RefreshCurrenices', e);
+	});
+	
+	var cc = require('currencycommon');
+    cc.refreshCurrencies({view: currencyView});
 	return self;
 };
+module.exports = ApplicationWindow;
