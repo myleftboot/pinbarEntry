@@ -16,7 +16,9 @@ function ApplicationWindow() {
 
 	currencyView.borderColor = '#000';
 	currencyView.borderWidth = 1;
-
+	// set the height of the top item on the main panel
+	pinBarView.height = '60%';
+	
 	//create master view container
 	var masterContainer = Ti.UI.createView({
 		top:0,
