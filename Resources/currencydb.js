@@ -71,7 +71,7 @@ function selectPairs(_args) {
 	}  catch (e) {Ti.API.info('Select Pair issue'+e); createCurrencyTable(db);}
 
 
-	var pairs = [{}];
+	var pairs = [];
 	while (data.isValidRow()) {
 		if (data.fieldByName('pair')){
 		  pairs.push({pair:      data.fieldByName('pair'),
