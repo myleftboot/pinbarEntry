@@ -10,11 +10,11 @@ function createCurrencyTable() {
 	try {
 		Ti.API.warn('Installing currency table');
 		if ( Ti.Platform.osname == 'android' ) {
-	       var db = Ti.Database.install('/db/currencies.sqlite', dbName);
+	       var db = Ti.Database.install('/db/currencies', dbName);
 	       
 	   }
 	    else {
-	    	var db = Ti.Database.install('/db/currencies.sqlite', dbName);
+	    	var db = Ti.Database.install('/db/currencies', dbName);
 	    }
 	Ti.API.warn('Installed');
 	
@@ -47,34 +47,11 @@ function createCurrencyTable() {
 
 function openDB() {
 	
-	var dbPath;
-	var dbFile;
-	if ( Ti.Platform.osname == 'android' ) {
-	    dbPath = 'file:///data/data/' + Ti.App.getID() + '/databases/';
-	    dbFile = Ti.Filesystem.getFile( dbPath + dbName ); 
-	    if (dbFile.exists()) {
-	    	  Ti.API.info('Copying DB to internal storage');
-	    	  var success = dbFile.copy(Ti.Filesystem.applicationDataDirectory+'/'+dbName);
-	    	  if (success) {
-	    	  	dbFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory + '/' +dbName);
-	    	  	return Ti.Database.open(dbFile);
-	    	  }
-	    }
-		else {return createCurrencyTable();}
-	}
-	else {
-		return Ti.Database.install('/db/currencies.sqlite', dbName);
-	}
+	return Ti.Database.install('/db/currencies', dbName);
 }
 
 function closeDB(_args) {
 	_args.close();
-	if (Ti.Platform.osname == 'android') {
-		Ti.API.info('copying the file back now we are finished');
-		
-		var dbFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory + dbName);
-		if (dbFile) dbFile.copy('file:///data/data/' + Ti.App.getID() + '/databases/'+dbName);
-	}
 }
 
 function makePair(_args) {
@@ -158,7 +135,7 @@ function updateRate(_args) {
 	var sql = 'UPDATE currencies SET lastrate = "'+_args.rate+'", last_updated = DATE("now")  WHERE base||counter = "'+pair+'";';
 	try {
 		db.execute(sql);
-	} catch (e) {console.log(e)}
+	} catch (e) {console.warn('Error:'+e)}
 	closeDB(db);
     }
 }

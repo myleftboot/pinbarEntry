@@ -43,6 +43,10 @@ function ApplicationWindow() {
 		pinBarWindow.open();
 	});
 	
+	currencyView.addEventListener('currencyRefresh', function(e) {
+		currencyView.fireEvent('RefreshCurrenices', e);
+	});
+	
 	var cc = require('currencycommon');
     cc.refreshCurrencies({view: currencyView});
 	return self;
