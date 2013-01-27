@@ -62,6 +62,8 @@ function pinBarView() {
         
         function computeEntryParams(_args) {
             var rr = require('/riskreward');
+            var cc = require('/currencycommon');
+            
             console.log('computeEntryParams');
             if (pair) {
                var retrace = rr.determineRetracement({pair          : pair,
@@ -73,14 +75,14 @@ function pinBarView() {
 
               pb.lotSizeLbl.text = rr.calculatePositionSize({
                                                       pair            : pair,
-                                                      risk            : 50,
+                                                      risk            : cc.getTradeRisk(),
                                                       stopLoss        : iStopLoss.value,
                                                       entryPoint      : retrace
                                                       });  
                                                      
              pb.takeProfitLbl.text = rr.calculateNxRiskReward({
                                                       pair            : pair,
-                                                      RR              : 2,
+                                                      RR              : cc.getRiskReward(),
                                                       stopLoss        : iStopLoss.value,
                                                       entryPoint      : retrace
                                                       });  
@@ -219,6 +221,8 @@ function pinBarView() {
 	// create the input items
 
 	function getKeyboardToolbar() {
+		if (!(Ti.Platform.name == 'iPhone OS')) return null;
+		
 		var done = Titanium.UI.createButton({
 		    title: 'Done',
 		    style: Titanium.UI.iPhone.SystemButtonStyle.DONE,
@@ -248,11 +252,10 @@ function pinBarView() {
     
         var lRetracement = Ti.UI.createLabel({
                                       text: iRetracement.value,
-                                      width: '100%',
-                                      height: 'auto',
-                                      top: 30,
-                                      left: 0,
-                                      textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER
+                                      right: 10,
+                                      width:'25%',
+                                      textAlign: Ti.UI.TEXT_ALIGNMENT_RIGHT,
+                                      color: pb.ENTRYCOL
                                       });
         
         var lEntryPoint   = Ti.UI.createLabel({right:10, width:'25%', text:'0', textAlign:Ti.UI.TEXT_ALIGNMENT_RIGHT});
@@ -266,8 +269,8 @@ function pinBarView() {
 	  var row = Ti.UI.createTableViewRow({ title: _args.title });
 	  if (_args.textField) { row.add(_args.textField)};
 	  if (_args.label)     {row.add(_args.label)};
-          if (_args.slider)    {row.add(_args.slider)};
-          if (_args.check)     {row.hasCheck = true};
+      if (_args.slider)    {row.add(_args.slider)};
+      if (_args.check)     {row.hasCheck = true};
 	  return row
 	};
 
@@ -282,8 +285,7 @@ function pinBarView() {
 	pinBarDets.add(createTableRow({title: pb.BULLNAME}));
 
 	var retracement = Ti.UI.createTableViewSection({ headerTitle: 'Retracement' });
-	retracement.add(createTableRow({title: '% Retracement',       slider : iRetracement}));
-	retracement.add(createTableRow({title: 'Retracement',         label  : lRetracement}));
+	retracement.add(createTableRow({title: '% Retracement',       slider : iRetracement, label:lRetracement}));
 
 
 	var positionSize = Ti.UI.createTableView({

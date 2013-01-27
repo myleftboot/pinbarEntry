@@ -1,7 +1,8 @@
 function ApplicationWindow() {
 	//declare module dependencies
-	var MasterView = require('ui/common/MasterView'),
-		DetailView = require('ui/common/DetailView');
+	var CurrencyView = require('ui/common/currencyView'),
+	    PinBarView = require('ui/common/pinbarView');
+	    CommentaryView = require('ui/common/commentaryView');
 		
 	//create object instance
 	var self = Ti.UI.createWindow({
@@ -9,20 +10,22 @@ function ApplicationWindow() {
 	});
 		
 	//construct UI
-	var masterView = new MasterView(),
-		detailView = new DetailView();
+	var currencyView = new CurrencyView(),
+            pinBarView = new PinBarView();
+            commentaryView = new CommentaryView();
+
 		
 	//create master view container
 	var masterContainerWindow = Ti.UI.createWindow({
-		title:'Products'
+		title:'Currencies'
 	});
-	masterContainerWindow.add(masterView);
+	masterContainerWindow.add(currencyView);
 	
 	//create detail view container
-	var detailContainerWindow = Ti.UI.createWindow({
-		title:'Product Details'
+	var pinBarWindow = Ti.UI.createWindow({
+		title:'Pin Bar Entry'
 	});
-	detailContainerWindow.add(detailView);
+	pinBarWindow.add(pinBarView);
 	
 	//create iOS specific NavGroup UI
 	var navGroup = Ti.UI.iPhone.createNavigationGroup({
@@ -31,10 +34,17 @@ function ApplicationWindow() {
 	self.add(navGroup);
 	
 	//add behavior for master view
-	masterView.addEventListener('itemSelected', function(e) {
-		detailView.fireEvent('itemSelected',e);
-		navGroup.open(detailContainerWindow);
+	currencyView.addEventListener('currencySelected', function(e) {
+		pinBarView.fireEvent('currencySelected',e);
+		commentaryView.fireEvent('currencySelected', e);
+		navGroup.open(pinBarWindow);
 	});
+	currencyView.addEventListener('currencyRefresh', function(e) {
+		currencyView.fireEvent('RefreshCurrenices', e);
+	});
+	
+	var cc = require('currencycommon');
+    cc.refreshCurrencies({view: currencyView});
 	
 	return self;
 };

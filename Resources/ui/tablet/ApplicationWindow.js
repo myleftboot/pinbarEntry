@@ -3,30 +3,36 @@ function ApplicationWindow() {
 	var CurrencyView = require('ui/common/currencyView'),
 	    PinBarView = require('ui/common/pinbarView');
 	    CommentaryView = require('ui/common/commentaryView');
-
+        SettingsView = require('ui/common/settingsView');
+        
 	//create object instance
 	var self = Ti.UI.createWindow({
-		backgroundColor:'#ffffff'
+		backgroundColor:'#ffffff',
+		
 	});
 
 	//construct UI
 	var currencyView = new CurrencyView(),
-            pinBarView = new PinBarView();
-            commentaryView = new CommentaryView();
-
+            pinBarView = new PinBarView(),
+            commentaryView = new CommentaryView(),
+            settingsView = new SettingsView();
+            
 	currencyView.borderColor = '#000';
 	currencyView.borderWidth = 1;
 	// set the height of the top item on the main panel
-	pinBarView.height = '60%';
+	currencyView.height = '70%';
+	pinBarView.height = '50%';
 	
 	//create master view container
 	var masterContainer = Ti.UI.createView({
 		top:0,
 		bottom:0,
 		left:0,
-		width:240
+		width:240,
+		layout:"vertical"
 	});
 	masterContainer.add(currencyView);
+	masterContainer.add(settingsView);
 	self.add(masterContainer);
 
 	//create detail view container

@@ -89,7 +89,7 @@ function calculatePositionSize(_args) {
       var pointsToStop = calculatePointsToStop(_args)
       // now work out position size
       var posSize = (counterRisk / pointsToStop) * divisor;
-      console.log(posSize);
+      console.log('posSize'+posSize);
       positionSize = (posSize / 100000).toFixed(2);
 
     } catch (e) {console.log(e)};

@@ -1,0 +1,310 @@
+<h1>sweetSocial Module</h1>
+<h2>Aims</h2>
+<p>Our aim here at twenty minute modules is to get you up and running with this module within twenty minutes.
+This module and the documentation have been designed with ease of integration in mind. </p>
+<p>If you read this documentation carefully, have the pre-requisites in place, and examine the example code, you should be tweeting or facebooking (is that a valid phrase?) within twenty minutes...</p>
+<p>Lets get started...</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>A Twitter account setup on the iOS simulator (if you want to use the twitter functionality)</li>
+<li>A facebook account setup on the iOS simulator (if you want to use the facebook functionality)</li>
+<li>Titanium installed with at least version 2.0 of the SDK</li>
+</ul>
+<h2>Description</h2>
+<p>This module allows you to integrate with twitter and facebook natively. No user login popups or user interaction. Just a native popup to ask the users form permission as any other native app would present. It allows <strong>you</strong> the app designer to control what is sent. We include a tweetsheet and facebook sheet in keeping with other offerings on the Appcelerator marketplace but we doubt you will use them.</p>
+<h2>Getting Started</h2>
+<p>View the <a href="http://docs.appcelerator.com/titanium/2.0/#!/guide/Using_Titanium_Modules">Using Titanium Modules</a> document for instructions on getting started with using this module in your application.</p>
+<p>Most of the twitter parameters come directly from the twitter API. Look at the <a href="https://dev.twitter.com/docs/api/1.1">Twitter API</a> for more information.</p>
+<h2>Accessing the tmm.tweet Module</h2>
+<p>To access this module from JavaScript, you would code the following:</p>
+<pre><code>var sc = require('tmm.tweet');
+</code></pre>
+<h2>Sample Call</h2>
+<pre><code>var sc = require('tmm.tweet');
+
+sc.facebookPost({appIdKey:           "125727654245731",
+                 visibility:         "friends", // by default posts are visible to just you, other valid values are friends and everyone
+                 text:               "a facebook update without a picture",
+                 image:              "",
+                 success:            function(e) {alert(JSON.stringify(e));},
+                 error:              function(e) {alert(JSON.stringify(e));}
+             });
+</code></pre>
+<p>});</p>
+<hr />
+<h2>Functions</h2>
+<h2>Accounts</h2>
+<h3>getAccount</h3>
+<p>Users can store multiple twitter accoutns on the device. This module allows the user to select the twitter account they wish to use. If the user has a single account on the device it is returned immediately from the function. If there is more than one then a popup is presented allowing them to select the account to use. This is then returned</p>
+<h4>Arguments</h4>
+<ul>
+<li>success     [string] The code to be executed when the account selection is completed. The selectedAccount property will contain the selected twitter account </li>
+<li>noAccount   [string] The code to be executed if there are no twitter accounts on the device. </li>
+<li>vw          [Ti.View] The view the popup selection box is displayed on. </li>
+</ul>
+<h4>Usage</h4>
+<pre><code>getAccount({
+    success:   function(e){ Ti.API.info('Account Selected = '+e.selectedAccount);},
+    vw:        view
+});
+</code></pre>
+<h3>getAccountsDict</h3>
+<p>Returns an array of all twitter accounts registered on the device. For those times when you dont want to use the popup that cmoes with getAccount.</p>
+<h4>Arguments</h4>
+<ul>
+<li>success:   [string] The code to be executed when the list of twitter accounts has been retrieved. The twitter acounts are passed as a parameter to this callback.</li>
+</ul>
+<h4>Usage</h4>
+<pre><code>getAccountsDict({
+    accounts: function(obj) { var accounts=obj.accounts;
+                              for (var i=0; i&lt;accounts.length; i++) {
+                                       Ti.API.info(i+accounts[i]); 
+                              }
+                            }
+});
+</code></pre>
+<h2>Tweeting</h2>
+<h3>tweet</h3>
+<p>Sends a tweet. You can send a tweet alone or alos add an array of urls, or attach a picture to the tweet.</p>
+<h4>Arguments</h4>
+<ul>
+<li>message:    [string]     The tweet text</li>
+<li>account:    [string]     The account to send the tweet from. If no account specified and there are multiple account on the phone the module will prompt the user for a account. If there is a single account it will automatically be selected. This means that you do not have to call getAccount before sending a tweet.</li>
+<li>urls:       [array of sting] A list of urls to attach to the tweet. Multiple urls can be attached.</li>
+<li>image:      [array of blob]  An image to attach to the tweet. Although this is an array, only the first image will be used. In a future version we may allow multiple images.</li>
+<li>success:    [string] The code to be executed when the tweet is sent</li>
+<li>cancel:     [string] The code to execute when the user cancels the account selection dialog</li>
+<li>error:      [string] The code to execute if the tweet fails to send</li>
+<li>noAccount   [string] The code to be executed if there are no twitter accounts on the device. </li>
+<li>vw:         [TiView] The view to display the account selection dialog if the account is not specified</li>
+</ul>
+<h4>Usage</h4>
+<pre><code>tweet({
+    message:   "the text to tweet",
+    account:   "@account_name", /* the Twitter account to send the tweet from, can be left blank */
+    urls:      ['url'],
+    image:     [TiBlob], /* a Ti.blob image to attach to the tweet, optional */
+    success:   function(obj) { Ti.API.info('Status Code = '+obj.result); },
+    cancel:    function(obj) { alert('User has cancelled tweet'); },
+    error:     function(obj) { Ti.API.info('Status Code = '+obj.result); },
+    noAccount: function(obj) { alert('User has no twitter accounts on the device'); },
+    vw:        view /* the current view being shown. Used to show the twitter account selection dialog */
+});
+</code></pre>
+<h3>tweetWithSheet</h3>
+<p>Sends a tweet using the native tweet creation popup.</p>
+<h4>Arguments</h4>
+<ul>
+<li>animate:    [string] "yes" or "no". Should the tweet popup be animated as it is shown?</li>
+<li>success:    [string] The code to be executed when the tweet is sent</li>
+<li>cancel:     [string] The code to execute when the user cancels the account selection dialog</li>
+</ul>
+<h4>Usage</h4>
+<pre><code>tweetWithSheet({
+    animate: "yes", 
+    success: function() { alert('Tweet successfully sent'); },
+    cancel:  function() { alert('User has cancelled tweet'); }
+});
+</code></pre>
+<h3>retweets</h3>
+<p>Returns up to 100 of the first retweets of a given tweet.</p>
+<h4>Arguments</h4>
+<ul>
+<li>accountName:[string] The twitter account name</li>
+<li>id:         [string] The tweet identifier. A long number that uniquely identifies a tweet</li>
+<li>count:      [string] The number of retweets to fetch</li>
+<li>trim_user:  [string] When set to either true, t or 1, each tweet returned in a timeline will include a user object including only the status authors numerical ID. Setting this to false makes the returned object larger, so only do it if you need the extra information.</li>
+<li>success:    [string] The code to be executed when successful</li>
+<li>error:      [string] The code to execute if the request fails</li>
+</ul>
+<h4>Usage</h4>
+<pre><code>retweets({
+    accountName: "@account_name",
+    id:          "tweet id",
+    count:       "10",
+    trim_user:   "false",
+    success:     function(obj) { Ti.API.info('Status Code = '+obj.result); },
+    error:       function(obj) { Ti.API.info('Status Code = '+obj.result); }
+});
+</code></pre>
+<h3>retweet</h3>
+<p>Retweets a tweet. </p>
+<h4>Arguments</h4>
+<ul>
+<li>accountName:[string] The twitter account name</li>
+<li>id:         [string] The tweet identifier. A long number that uniquely identifies a tweet</li>
+<li>trim_user:  [string] When set to either true, t or 1, each tweet returned in a timeline will include a user object including only the status authors numerical ID. Setting this to false makes the returned object larger, so only do it if you need the extra information.</li>
+<li>success:    [string] The code to be executed when successful</li>
+<li>error:      [string] The code to execute if the request fails</li>
+</ul>
+<h4>Usage</h4>
+<pre><code>retweet({
+    accountName: "@account_name,
+    id:          "tweet id",
+    trim_user:   "true",
+    success:     function(obj) { Ti.API.info('Status Code = '+obj.result); },
+    error:       function(obj) { Ti.API.info('Status Code = '+obj.result); }
+});
+</code></pre>
+<h3>destroy</h3>
+<p>Destroys the Tweet specified by the required ID parameter. The authenticating user must be the author of the Tweet. Returns the destroyed status if successful.</p>
+<h4>Arguments</h4>
+<ul>
+<li>accountName:[string] The twitter account name</li>
+<li>id:         [string] The tweet identifier. A long number that uniquely identifies a tweet</li>
+<li>trim_user:  [string] When set to either true, t or 1, each tweet returned in a timeline will include a user object including only the status authors numerical ID. Setting this to false makes the returned object larger, so only do it if you need the extra information.</li>
+<li>success:    [string] The code to be executed when successful</li>
+<li>error:      [string] The code to execute if the request fails</li>
+</ul>
+<h4>Usage</h4>
+<pre><code>destroy({
+    accountName: "@account_name",
+    id:          "the unique identifier of the tweet (a long number)",
+    trim_user:   "false",
+    success:     function(obj) { Ti.API.info('Status Code = '+obj.result); },
+    error:       function(obj) { Ti.API.info('Status Code = '+obj.result); }
+});
+</code></pre>
+<h2>Timelines</h2>
+<h3>homeTimeLine</h3>
+<p>Returns a collection of the most recent Tweets and retweets posted by the authenticating user and the users they follow.</p>
+<h4>Arguments</h4>
+<ul>
+<li>accountName:[string] The twitter account name</li>
+<li>count:      [string] Specifies the number of tweets to try and retrieve</li>
+<li>since_id:   [string] Returns results with an ID greater than (that is, more recent than) the specified ID. A value of 0 will get all</li>
+<li>max_id:     [string] Returns results with an ID less than (that is, older than) or equal to the specified ID.  A value of 0 will get all</li>
+<li>trim_user:  [string] When set to either "true" each tweet returned in a timeline will include a user object including only the status authors numerical ID. Setting this to false makes the returned object larger, so only do it if you need the extra information.</li>
+<li>exclude_replies: [string] "true" or "false" Prevent replies from appearing in the returned timeline?</li>
+<li>contributor_details: [string] "true" or "false". Include the screen_name of the contributor? By default only the user_id of the contributor is included</li>
+<li>include_entities: [string] "true" or "false". The entities node will not be included when set to false. This cuts down the size of the object returned</li>
+<li>success:    [string] The code to be executed when successful</li>
+<li>error:      [string] The code to execute if the request fails</li>
+</ul>
+<h4>Usage</h4>
+<pre><code>homeTimeline({
+    accountName:         "@account_name",
+    count:               "10",
+    since_id:            "0",
+    max_id:              "0",
+    trim_user:           "false",
+    exclude_replies:     "false",
+    contributor_details: "false",
+    include_entities:    "false",
+    success:             function(obj) { Ti.API.info('Status Code = '+obj.result); },
+    error:               function(obj) { Ti.API.info('Status Code = '+obj.result); }
+});
+</code></pre>
+<h3>userTimeline</h3>
+<p>Returns a collection of the most recent Tweets posted by the user indicated by the screen_name or user_id</p>
+<h4>Arguments</h4>
+<ul>
+<li>accountName:[string] The twitter account name</li>
+<li>user_id:    [string] (optional) The ID of the user for whom to return results for</li>
+<li>screen_name:[string] (optional) The screen name of the user for whom to return results for.</li>
+<li>count:      [string] Specifies the number of tweets to try and retrieve</li>
+<li>since_id:   [string] Returns results with an ID greater than (that is, more recent than) the specified ID. A value of 0 will get all</li>
+<li>max_id:     [string] Returns results with an ID less than (that is, older than) or equal to the specified ID.  A value of 0 will get all</li>
+<li>trim_user:  [string] When set to either "true" each tweet returned in a timeline will include a user object including only the status authors numerical ID. Setting this to false makes the returned object larger, so only do it if you need the extra information.</li>
+<li>exclude_replies: [string] "true" or "false" Prevent replies from appearing in the returned timeline?</li>
+<li>contributor_details: [string] "true" or "false". Include the screen_name of the contributor? By default only the user_id of the contributor is included</li>
+<li>include_rts: [string] "true" or "false". When set to false, the timeline will strip any native retweets</li>
+<li>success:    [string] The code to be executed when successful</li>
+<li>error:      [string] The code to execute if the request fails</li>
+</ul>
+<h4>Usage</h4>
+<pre><code>userTimeline({
+    accountName:         "@account_name",
+    user_id:             "the unique user identifier",
+    screen_name:         "",
+    count:               "10",
+    since_id:            "0",
+    max_id:              "0",
+    trim_user:           "false",
+    exclude_replies:     "false",
+    contributor_details: "false",
+    include_rts:         "false",
+    success:             function(obj) { Ti.API.info('Status Code = '+obj.result); },
+    error:               function(obj) { Ti.API.info('Status Code = '+obj.result); }
+});
+</code></pre>
+<h3>mentionsTimeline</h3>
+<p>Returns the most recent mentions (tweets containing a users's @screen_name) for the authenticating user.</p>
+<h4>Arguments</h4>
+<ul>
+<li>accountName:[string] The twitter account name</li>
+<li>count:      [string] Specifies the number of tweets to try and retrieve</li>
+<li>since_id:   [string] Returns results with an ID greater than (that is, more recent than) the specified ID. A value of 0 will get all</li>
+<li>max_id:     [string] Returns results with an ID less than (that is, older than) or equal to the specified ID.  A value of 0 will get all</li>
+<li>trim_user:  [string] When set to either "true" each tweet returned in a timeline will include a user object including only the status authors numerical ID. Setting this to false makes the returned object larger, so only do it if you need the extra information.</li>
+<li>contributor_details: [string] "true" or "false". Include the screen_name of the contributor? By default only the user_id of the contributor is included</li>
+<li>include_entities: [string] "true" or "false". The entities node will not be included when set to false. This cuts down the size of the object returned</li>
+<li>success:    [string] The code to be executed when successful</li>
+<li>error:      [string] The code to execute if the request fails</li>
+</ul>
+<h4>Usage</h4>
+<pre><code>mentionsTimeline({
+    accountName:         "@account_name",
+    count:               "10",
+    since_id:            "0",
+    max_id:              "0",
+    trim_user:           "false",
+    contributor_details: "false",
+    include_entities:    "false",
+    success:             function(obj) { Ti.API.info('Status Code = '+obj.result); },
+    error:               function(obj) { Ti.API.info('Status Code = '+obj.result); }
+});
+</code></pre>
+<h2>Facebook</h2>
+<h3>facebookWithSheet</h3>
+<p>iOS built-in view method</p>
+<h4>Arguments</h4>
+<ul>
+<li>animate:    [string] "yes" or "no". Should the facebook popup be animated as it is shown?</li>
+<li>text:       [string] The comment text</li>
+<li>image:      [array of TiBlob] The image to add to the post. Single images only in this release</li>
+<li>success:    [string] The code to be executed when successful</li>
+<li>cancel:     [string] The code to execute when the user cancels the facebook sheet without sending</li>
+</ul>
+<h4>Usage</h4>
+<pre><code>facebookWithSheet({
+    animate: "yes/no",
+    text:    "text here",
+    image:   [TiBlob],
+    success: function() {alert('success');},
+    cancel:  function() {alert('cancelled');}
+});
+</code></pre>
+<h3>facebookPost</h3>
+<p>post to facebook programmatically</p>
+<h4>Arguments</h4>
+<ul>
+<li>appIdKey:   [string] Your facebook app id. You must have a Native iOS facebook app to post. See facebook developer pages</li>
+<li>visibility: [string] Who should see the post? Valid values are:
+everyone  Everyone can see the post
+friends   Only the user friends
+me        The default, only the user can see the update</li>
+<li>text:       [string] The comment text</li>
+<li>image:      [array of TiBlob] The image to add to the post. Single images only in this release</li>
+<li>success:    [string] The code to be executed when the tweet is sent</li>
+<li>error:      [string] The code to execute if the request fails</li>
+</ul>
+<h4>Usage</h4>
+<pre><code>facebookPost({
+    appIdKey:   "appId",
+    visibility: "",
+    text:       "text here",
+    image:      [TiBlob],
+    success:    function(obj) { Ti.API.info('Status Code = '+obj.result); },
+    error:      function(obj) { Ti.API.info('Status Code = '+obj.result); }
+});
+</code></pre>
+<hr />
+<h2>Author</h2>
+<p>Cope Consultancy Services on behalf of twenty minute modules</p>
+<h2>Module History</h2>
+<p>View the <a href="changelog.html">change log</a> for this module.</p>
+<h2>Feedback and Support</h2>
+<p>Please direct all questions, feedback, new feature requests, and concerns to <a href="mailto:info@copeconsultancy.co.uk?subject=SweetSocial%20Module">info@copeconsultancy.co.uk</a></p>
+<h2>License</h2>
+<p>Copyright&copy; 2012 by Cope Consultancy Services Ltd. All Rights Reserved. Please see the <a href="http://copeconsultancy.co.uk//tmm/sweetweet/module-end-user-licence-agreement-eula">LICENSE</a>.</p>

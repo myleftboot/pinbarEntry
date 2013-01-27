@@ -1,8 +1,8 @@
 function forexCommentaryView() {
-  var self = Ti.UI.createWindow({title: 'Forex Commentary'});
+
 	var forex = require('/forexCommentary');
 	var parse = require('/parseCommentary');
-	forex.init();
+
 	var thePair, theRate = null;
 
 	var mainVw = Ti.UI.createView({layout:'vertical'});
@@ -10,7 +10,6 @@ function forexCommentaryView() {
 	var title = Ti.UI.createLabel({
 		color:'#000'
 	});
-
 
 	var commentary = Ti.UI.createTextArea({
 		borderWidth:2,
@@ -24,14 +23,10 @@ function forexCommentaryView() {
 	  height : 150
 	});
 
-	commentary.addEventListener('return', function(e) {//forex.addCommentary({
-		                                               //      pair:       thePair, 
-		                                               //      rate:       theRate, 
-		                                               //      commentary: e.value});
-		                                               parse.addCommentary({
-		                                                     pair:       thePair, 
-		                                                     rate:       theRate, 
-		                                                     commentary: e.value});
+	commentary.addEventListener('return', function(e) {var db = require('/currencydb');
+	                                                   db.addComment({pair:    thePair,
+	                                                   	              rate:    theRate,
+	                                                   	              comment: e.value})
 		                                             });
 	// Additions for forex commentary
 
@@ -120,6 +115,7 @@ function forexCommentaryView() {
 		title.text = 'Thoughts on '+e.pair+': '+e.rate;
 		thePair = forex.returnThePair(e.pair);
 		theRate = e.rate;
+		forex.getLast3CommentsOnPair({success: function(e) {createCommentaryRows(e)}});
 	});
 
 	return mainVw;

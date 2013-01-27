@@ -1,6 +1,6 @@
 function createRow(_args) {
                 var tableRow = Ti.UI.createTableViewRow({
-			height: 50,
+			height: 40,
 			className: 'RSSRow',
 			hasDetail: true,
 		});
@@ -76,15 +76,17 @@ Ti.API.info(theYql);
 };
 
 function updateCurrencies(_args) {
-	var tabRows = [];
+
 	// we need to make single objects returned into an array
-	try { var rates = (_args.JSON.rate instanceof Array) ? _args.JSON.rate : [_args.JSON.rate];
-	} catch (e) {
-		return;
-	}
+	if (Ti.Platform.osname == 'iPhone OS') {
+		try { var rates = (_args.JSON.rate instanceof Array) ? _args.JSON.rate : [_args.JSON.rate];
+		} catch (e) {
+			return;
+		}
+	} else var rates = _args.JSON.rate;
+	
 	var db = require('/currencydb');
 	for (var i in rates) {
-		
 		db.updateRate({pair   : rates[i].Name
 		              ,rate   : rates[i].Rate});
 	}
@@ -98,3 +100,23 @@ function refreshCurrencies(_args) {
 	fetchValues({pairings: db.selectPairs(), view: _args.view});
 };
 exports.refreshCurrencies = refreshCurrencies;
+
+function getAccountSize() {
+	return Ti.App.Properties.getDouble('accountSize', 500);
+}
+exports.getAccountSize = getAccountSize;
+
+function getPercentageRisk() {
+	return Ti.App.Properties.getDouble('percentRisk', 1);
+}
+exports.getPercentageRisk = getPercentageRisk;
+
+function getRiskReward() {
+	return Ti.App.Properties.getInt('riskReward', 2);
+}
+exports.getRiskReward = getRiskReward;
+
+function getTradeRisk() {
+	return getAccountSize() * (getPercentageRisk() / 100);
+}
+exports.getTradeRisk = getTradeRisk;

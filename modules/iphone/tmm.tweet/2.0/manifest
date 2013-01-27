@@ -1,0 +1,19 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 2.0
+apiversion: 2
+description: iOS 5+ sweetSocial Module
+author: Darren Cope/Andy Cartwright
+license: Commercial
+copyright: Copyright (c) 2012 Cope Consultancy Services Ltd.
+
+
+# these should not be edited
+name: sweetweet
+moduleid: tmm.tweet
+#guid: 545c2ddb-6673-43a9-a64c-f6f78f839a0c
+guid: E27604F8-1F9D-4C3A-BCE4-A84AAFDB9DE5
+platform: iphone
+minsdk: 2.1.0.GA

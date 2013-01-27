@@ -11,6 +11,7 @@ function createCurrencyTable() {
 		Ti.API.warn('Installing currency table');
 		if ( Ti.Platform.osname == 'android' ) {
 	       var db = Ti.Database.install('/db/currencies.sqlite', dbName);
+	       
 	   }
 	    else {
 	    	var db = Ti.Database.install('/db/currencies.sqlite', dbName);
@@ -51,19 +52,37 @@ function openDB() {
 	if ( Ti.Platform.osname == 'android' ) {
 	    dbPath = 'file:///data/data/' + Ti.App.getID() + '/databases/';
 	    dbFile = Ti.Filesystem.getFile( dbPath + dbName ); 
-	    if (dbFile.exists()) {Ti.API.info('Opening DB');return Ti.Database.open(dbFile);}
+	    if (dbFile.exists()) {
+	    	  Ti.API.info('Copying DB to internal storage');
+	    	  var success = dbFile.copy(Ti.Filesystem.applicationDataDirectory+'/'+dbName);
+	    	  if (success) {
+	    	  	dbFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory + '/' +dbName);
+	    	  	return Ti.Database.open(dbFile);
+	    	  }
+	    }
 		else {return createCurrencyTable();}
 	}
 	else {
 		return Ti.Database.install('/db/currencies.sqlite', dbName);
 	}
 }
+
+function closeDB(_args) {
+	_args.close();
+	if (Ti.Platform.osname == 'android') {
+		Ti.API.info('copying the file back now we are finished');
+		
+		var dbFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory + dbName);
+		if (dbFile) dbFile.copy('file:///data/data/' + Ti.App.getID() + '/databases/'+dbName);
+	}
+}
+
 function makePair(_args) {
 	return _args.replace(' to ', '');
 }
 
 function selectPairs(_args) {
-	Ti.API.warn('SelectPairs');
+
     var db = openDB();
 	var sql = 'SELECT base||counter pair, lastrate, pipdp FROM currencies';
 	try {
@@ -82,7 +101,7 @@ function selectPairs(_args) {
 	}
 
 	data.close();
-	db.close()
+	closeDB(db);
 
 	return pairs;
 }
@@ -90,7 +109,7 @@ exports.selectPairs = selectPairs;
 
 function getRate(_args) {
 	//TODO should add a displayed tag to the database
-	console.log('Getting rate for '+_args.base+_args.counter);
+
     var base      = _args.base;
     var counter   = _args.counter;
     
@@ -106,7 +125,7 @@ function getRate(_args) {
 	}
 
 	data.close();
-	db.close();
+	closeDB(db);
 	}
     return retval;
 }
@@ -125,13 +144,14 @@ function getPipDP(_args) {
 	}
 
 	data.close();
-	db.close();
+	closeDB(db);
 
 	return retval;
 }
 exports.getPipDP = getPipDP;
 
 function updateRate(_args) {
+	console.log('updateRate with'+JSON.stringify(_args));
 	var pair = makePair(_args.pair);
 	var db = openDB();
     if (_args.rate && _args.pair) {
@@ -139,7 +159,49 @@ function updateRate(_args) {
 	try {
 		db.execute(sql);
 	} catch (e) {console.log(e)}
-	db.close();
+	closeDB(db);
     }
 }
 exports.updateRate = updateRate;
+
+function getCommentary(_args) {
+    var db = openDB();
+    if (_args.pair) var sql = 'SELECT pair, commentary, last_updated FROM comentary WHERE pair = "'+_args.pair+'" ORDER BY last_updated DESC;';
+    else var sql = 'SELECT pair, commentary, last_updated FROM commentary ORDER BY last_updated DESC;';
+	try {
+		var data = db.execute(sql);
+	}  catch (e) {Ti.API.info('Select commentary issue'+e);}
+
+
+	var comments = [];
+	while (data.isValidRow()) {
+		if (data.fieldByName('pair')){
+		  comments.push({pair:      data.fieldByName('pair'),
+		                 comment:  data.fieldByName('commentary'),
+		                 created_at: data.fieldByName('last_updated')
+		            });
+	    }
+		data.next();
+	}
+
+	data.close();
+	closeDB(db);
+
+	return comments;
+}
+exports.getCommentary = getCommentary;
+
+function addComment(_args) {
+	if (!(_args.pair && _args.comment)) return;
+	var db = openDB();
+    if (_args.rate && _args.pair) {
+    	var rate;
+    	(isNaN(_args.rate)) ? rate = 0 : rate = _args.rate;
+	var sql = 'INSERT INTO commentary (pair, commentary, rate, last_updated) VALUES ("'+_args.pair+'", "'+_args.comment+'", '+rate+', DATE("now"))';
+	try {
+		db.execute(sql);
+	} catch (e) {console.log(e)}
+	closeDB(db);
+    }
+}
+exports.addComment = addComment;
