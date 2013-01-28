@@ -6,12 +6,11 @@ function CurrenciesView() {
   var currencyCommon = require('/currencycommon');
 	var stockList = Ti.UI.createTableView({data: currencyCommon.populateTableWithPairs()});
 	
-	//stockList.addEventListener('click', function(e) {showPinBar(e)});
-	
 	vertLayout.add(stockList);
 
 	//add behavior
 	stockList.addEventListener('click', function(e) {
+
 		vertLayout.fireEvent('currencySelected', {
 			pair:e.rowData.pair,
 			rate:e.rowData.rate

@@ -119,21 +119,24 @@ function pinBarView() {
 	                                    text: 'Entry Point',
 	                                    height: '30%',
 	                                          top: 0,
-	                                          textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER
+	                                          textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+	                                          color: vwBorderColor
                                       });
 
             var lLotSize = Ti.UI.createLabel({
 	                                    text: 'Lot Size',
 	                                    height: '30%',
 	                                          top: 0,
-	                                          textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER
+	                                          textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+	                                          color: vwBorderColor
                                       });
                                       
             var lTakeProfit = Ti.UI.createLabel({
 	                                    text: '2x Take Profit',
 	                                    height: '30%',
 	                                          top: 0,
-	                                          textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER
+	                                          textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+	                                          color: vwBorderColor
                                       });
             entryPointVw.add(lEntry);
             entryPointVw.add(pb.entryLbl);
@@ -182,7 +185,7 @@ function pinBarView() {
         // Arguments - vw the view, bull - a bullish (true) or bearish (false) pin bar
         function drawPB(_args) {
           
-          var vw = Ti.UI.createView({size: Ti.UI.FILL});
+          var vw = Ti.UI.createView({/*size: Ti.UI.FILL*/});
           
           var bull = (_args.bull)||false;
           
@@ -266,8 +269,8 @@ function pinBarView() {
       
 
 	function createTableRow(_args) {
-	  var row = Ti.UI.createTableViewRow({ title: _args.title });
-	  if (_args.textField) { row.add(_args.textField)};
+	  var row = Ti.UI.createTableViewRow({ title: _args.title, color:vwBorderColor});
+	  if (_args.textField) {row.add(_args.textField)};
 	  if (_args.label)     {row.add(_args.label)};
       if (_args.slider)    {row.add(_args.slider)};
       if (_args.check)     {row.hasCheck = true};
@@ -314,6 +317,7 @@ function pinBarView() {
 	pinBar.add(theScreen);
 
 	pinBar.addEventListener('currencySelected', function(_args) {
+
 		pair = _args.pair;
 		risk = _args.risk;
 		rate = _args.rate

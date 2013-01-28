@@ -3,6 +3,8 @@ function createRow(_args) {
 			height: 40,
 			className: 'RSSRow',
 			hasDetail: true,
+			pair: _args.pair,
+			rate: _args.rate
 		});
 		var layout = Ti.UI.createView({});
 
@@ -28,10 +30,6 @@ function createRow(_args) {
 		layout.add(pair);
 		layout.add(value);
 
-		// set some row context
-		tableRow.pair = _args.pair;
-		tableRow.rate = _args.rate;
-
 		tableRow.add(layout);
 		
 		return tableRow;
@@ -45,9 +43,6 @@ function populateTableWithPairs() {
 	var pairs = db.selectPairs()
 	for (var dbVal in pairs) {
 
-                // we dont know the currency values at this stage so just push the pairings
-                // we should store the latest values in the local database and populate the table with them here
-
 		tabRows.push(createRow({pair: pairs[dbVal].pair
 		                       ,rate: pairs[dbVal].lastRate}));
 	}
@@ -57,7 +52,7 @@ exports.populateTableWithPairs = populateTableWithPairs;
 
 function fetchValues(_args) {
 	// returns a list of prices from an array of stocks
-Ti.API.info('fetchValues');
+
 	if (_args.pairings && _args.pairings.length > 0) {
 		var currencies = new String;
 		for (i=0; i< _args.pairings.length; i++) {
@@ -66,7 +61,7 @@ Ti.API.info('fetchValues');
 		// lose the first character ','
 		currencies = currencies.substr(1);
 		var theYql = 'SELECT * from yahoo.finance.xchange WHERE pair IN (' + currencies + ')';
-Ti.API.info(theYql);
+
 		// send the query off to yahoo
 		Ti.Yahoo.yql(theYql, function(e) {
 			Ti.API.info('Returned from YQL with'+JSON.stringify(e));
