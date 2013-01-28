@@ -61,7 +61,7 @@ function pinBarView() {
         }
         
         function computeEntryParams(_args) {
-            var rr = require('/riskreward');
+            var rr = require('/riskReward');
             var cc = require('/currencycommon');
             
             console.log('computeEntryParams');
@@ -130,9 +130,9 @@ function pinBarView() {
 	                                          textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
 	                                          color: vwBorderColor
                                       });
-                                      
+            var cc = require('/currencycommon')
             var lTakeProfit = Ti.UI.createLabel({
-	                                    text: '2x Take Profit',
+	                                    text: cc.getRiskReward()+'x Take Profit',
 	                                    height: '30%',
 	                                          top: 0,
 	                                          textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
@@ -152,7 +152,7 @@ function pinBarView() {
         
         function processTableClick(_args) {
           // if the rowSource is the bull indicator then switch from bull to bear
-          if (_args.rowData.title == pb.BULLNAME) {
+          if (bull) {
               positionSize.updateRow(_args.index, 
                                      createTableRow({title: pb.BEARNAME}),
                                      {animated : true}
@@ -162,7 +162,7 @@ function pinBarView() {
               pb.thePinBar = drawPB({bull:bull});
               pinbarVw.add(pb.thePinBar);
           }
-          if (_args.rowData.title == pb.BEARNAME) {
+          else {
               positionSize.updateRow(_args.index, 
                                      createTableRow({title: pb.BULLNAME}),
                                      {animated : true}
@@ -241,9 +241,9 @@ function pinBarView() {
 		return toolbar;
 	};
 
-	var iStopLoss     = Ti.UI.createTextField({keyboardType : Ti.UI.KEYBOARD_NUMBER_PAD, keyboardToolbar: getKeyboardToolbar(), right:10, width:'25%', textAlign:Ti.UI.TEXT_ALIGNMENT_RIGHT, color:pb.SLCOL});
-	var iPBTop        = Ti.UI.createTextField({keyboardType : Ti.UI.KEYBOARD_NUMBER_PAD, keyboardToolbar: getKeyboardToolbar(), right:10, width:'25%', textAlign:Ti.UI.TEXT_ALIGNMENT_RIGHT});
-	var iPBBtm        = Ti.UI.createTextField({keyboardType : Ti.UI.KEYBOARD_NUMBER_PAD, keyboardToolbar: getKeyboardToolbar(), right:10, width:'25%', textAlign:Ti.UI.TEXT_ALIGNMENT_RIGHT});
+	var iStopLoss     = Ti.UI.createTextField({keyboardType : Ti.UI.KEYBOARD_NUMBER_PAD, keyboardToolbar: getKeyboardToolbar(), right:10, width:'35%', textAlign:Ti.UI.TEXT_ALIGNMENT_RIGHT, color:pb.SLCOL});
+	var iPBTop        = Ti.UI.createTextField({keyboardType : Ti.UI.KEYBOARD_NUMBER_PAD, keyboardToolbar: getKeyboardToolbar(), right:10, width:'35%', textAlign:Ti.UI.TEXT_ALIGNMENT_RIGHT});
+	var iPBBtm        = Ti.UI.createTextField({keyboardType : Ti.UI.KEYBOARD_NUMBER_PAD, keyboardToolbar: getKeyboardToolbar(), right:10, width:'35%', textAlign:Ti.UI.TEXT_ALIGNMENT_RIGHT});
 
         var iRetracement  = Ti.UI.createSlider({
                                       top: 50,
@@ -269,7 +269,9 @@ function pinBarView() {
       
 
 	function createTableRow(_args) {
-	  var row = Ti.UI.createTableViewRow({ title: _args.title, color:vwBorderColor});
+	  var row = Ti.UI.createTableViewRow({});
+	  if (_args.title)     {var lbl = Ti.UI.createLabel({left : 10, text: _args.title, textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT});
+	                        row.add(lbl)}
 	  if (_args.textField) {row.add(_args.textField)};
 	  if (_args.label)     {row.add(_args.label)};
       if (_args.slider)    {row.add(_args.slider)};
@@ -292,7 +294,8 @@ function pinBarView() {
 
 
 	var positionSize = Ti.UI.createTableView({
-	  data: [stopLoss, pinBarDets, retracement]
+	  data: [stopLoss, pinBarDets, retracement],
+	  backgroundColor: (Ti.Platform.osname == 'android') ? 'black': 'white'
 	});
 
         // process any clicks on the table

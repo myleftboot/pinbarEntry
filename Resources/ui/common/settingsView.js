@@ -56,7 +56,21 @@ function SettingsView() {
 	  return row
 	};
 	
-
+    function tweetScreenshot() {
+    	Ti.Media.takeScreenshot(function(e) {
+	    	var test = require('tmm.tweet');
+			test.tweet({
+			    message:   "Commentary",
+			    image:     [e.media],
+			    account:   "@CopeDev", // the Twitter account to send the tweet from, can be left blank
+			    success:   function(obj) { Ti.API.info('Status Code = '+obj.result); },
+			    cancel:    function(obj) { alert('User has cancelled tweet'); },
+			    error:     function(obj) { Ti.API.info('Status Code = '+obj.result); },
+			    noAccount: function(obj) { alert('User has no twitter accounts on the device'); },
+			});
+		});
+    };
+    
 	var account = Ti.UI.createTableViewSection({ headerTitle: 'Account' });
 	account.add(createTableRow({title: 'Account Balance',        textField : iAccountSize}));
 	
@@ -65,19 +79,10 @@ function SettingsView() {
 	trade.add(createTableRow({title: 'Risk:Reward',            slider : iRiskReward, label: lRiskReward}));
 	
 	var tweet = Ti.UI.createTableViewSection({ headerTitle: 'Tweet' });
-	var theButton = Ti.UI.createButton({title: 'Tweet', right:0});
+	var theButton = Ti.UI.createButton({title: 'Tweet Screen', right:0});
 
 	theButton.addEventListener('click', function(e) {
-		var test = require('tmm.tweet');
-		test.tweet({
-		    message:   "the text to tweet",
-		    account:   "@CopeDev", // the Twitter account to send the tweet from, can be left blank
-		    success:   function(obj) { Ti.API.info('Status Code = '+obj.result); },
-		    cancel:    function(obj) { alert('User has cancelled tweet'); },
-		    error:     function(obj) { Ti.API.info('Status Code = '+obj.result); },
-		    noAccount: function(obj) { alert('User has no twitter accounts on the device'); },
-		});
-
+		tweetScreenshot();
 	});
 
 	tweet.add(createTableRow({title: 'Tweet it', button: theButton}));
