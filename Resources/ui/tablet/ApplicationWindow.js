@@ -20,7 +20,7 @@ function ApplicationWindow() {
 	currencyView.borderColor = '#000';
 	currencyView.borderWidth = 1;
 	// set the height of the top item on the main panel
-	currencyView.height = '70%';
+	currencyView.height = '65%';
 	pinBarView.height = '50%';
 	
 	//create master view container

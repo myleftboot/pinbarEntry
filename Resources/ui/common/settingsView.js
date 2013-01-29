@@ -58,8 +58,8 @@ function SettingsView() {
 	
     function tweetScreenshot() {
     	Ti.Media.takeScreenshot(function(e) {
-	    	var test = require('tmm.tweet');
-			test.tweet({
+	    	var tmm = require('tmm.tweet');
+			tmm.tweet({
 			    message:   "Commentary",
 			    image:     [e.media],
 			    account:   "@CopeDev", // the Twitter account to send the tweet from, can be left blank
@@ -71,6 +71,19 @@ function SettingsView() {
 		});
     };
     
+    function facebookScreenshot() {
+    	Ti.Media.takeScreenshot(function(e) {
+	    	var tmm = require('tmm.tweet');
+	    	tmm.facebookPost({
+	    		appIdKey:   "469401486460863",
+	    		visibility: "me",
+	    		text:       "my forex app",
+	    		image:      [e.media],
+	    		success:    function(obj) { Ti.API.info('Status Code = '+JSON.stringify(obj)); },
+	    		error:      function(obj) { Ti.API.info('Status Code = '+JSON.stringify(obj)); }
+	    		});
+		});
+    };
 	var account = Ti.UI.createTableViewSection({ headerTitle: 'Account' });
 	account.add(createTableRow({title: 'Account Balance',        textField : iAccountSize}));
 	
@@ -79,16 +92,25 @@ function SettingsView() {
 	trade.add(createTableRow({title: 'Risk:Reward',            slider : iRiskReward, label: lRiskReward}));
 	
 	var tweet = Ti.UI.createTableViewSection({ headerTitle: 'Tweet' });
-	var theButton = Ti.UI.createButton({title: 'Tweet Screen', right:0});
+	var tweetButton = Ti.UI.createButton({title: 'Tweet Screen', right:0});
 
-	theButton.addEventListener('click', function(e) {
+	tweetButton.addEventListener('click', function(e) {
 		tweetScreenshot();
 	});
 
-	tweet.add(createTableRow({title: 'Tweet it', button: theButton}));
+	tweet.add(createTableRow({ button: tweetButton}));
+	
+	var facebook = Ti.UI.createTableViewSection({ headerTitle: 'Facebook' });
+	var facebookButton = Ti.UI.createButton({title: 'Facebook', right:0});
+
+	facebookButton.addEventListener('click', function(e) {
+		facebookScreenshot();
+	});
+
+	facebook.add(createTableRow({ button: facebookButton}));
 	
 	var settings= Ti.UI.createTableView({
-	  data: [account, trade, tweet]
+	  data: [account, trade, tweet, facebook]
 	});
 	vertLayout.add(settings);
     

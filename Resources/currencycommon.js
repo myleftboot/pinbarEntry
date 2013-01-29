@@ -97,7 +97,7 @@ function refreshCurrencies(_args) {
 exports.refreshCurrencies = refreshCurrencies;
 
 function getAccountSize() {
-	return Ti.App.Properties.getDouble('accountSize', 500);
+	return Ti.App.Properties.getDouble('accountSize', 8000);
 }
 exports.getAccountSize = getAccountSize;
 
