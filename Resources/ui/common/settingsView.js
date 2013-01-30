@@ -55,6 +55,17 @@ function SettingsView() {
       if (_args.button) {row.add(_args.button)};
 	  return row
 	};
+	function androidTweet() {
+
+ 		var intent = Ti.Android.createIntent({
+	        action: Ti.Android.ACTION_SEND,
+	        type: "text/plain"
+	    });
+	 
+	    intent.putExtra(Ti.Android.EXTRA_TEXT, 'Commentary');
+	    intent.addCategory(Ti.Android.CATEGORY_DEFAULT);
+	    Ti.Android.currentActivity.startActivity(intent);
+	}
 	
     function tweetScreenshot() {
     	Ti.Media.takeScreenshot(function(e) {
@@ -95,7 +106,11 @@ function SettingsView() {
 	var tweetButton = Ti.UI.createButton({title: 'Tweet Screen', right:0});
 
 	tweetButton.addEventListener('click', function(e) {
-		tweetScreenshot();
+		if (Ti.Platform.osname == 'android') {
+			androidTweet();
+		} else {
+			tweetScreenshot();
+		}
 	});
 
 	tweet.add(createTableRow({ button: tweetButton}));
