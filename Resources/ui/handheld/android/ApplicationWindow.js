@@ -5,6 +5,16 @@ function ApplicationWindow() {
 	    CommentaryView = require('ui/common/commentaryView'),
         SettingsView = require('ui/common/settingsView');
         
+	var ad = require("ti.admob");
+	
+	var adView = ad.createView({
+	    publisherId:"a15111352989fba",
+	    testing:true, 
+	    bottom: 0, 
+	    height: 50,
+	    width: Ti.Platform.displayCaps.platformWidth
+    }); 
+    
 	//create object instance
 	var self = Ti.UI.createWindow({
 		title:'Currencies',
@@ -26,8 +36,12 @@ function ApplicationWindow() {
 	var currencyView = new CurrencyView(),
 	    settingsView = new SettingsView();
 	    
+	currencyView.top = 0;
+	currencyView.bottom = 50;
+	
+	
 	self.add(currencyView);
-	//self.add(addMenu);
+	self.add(adView);
 
 	//add behavior for master view
 	currencyView.addEventListener('currencySelected', function(e) {
