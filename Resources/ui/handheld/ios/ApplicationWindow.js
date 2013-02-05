@@ -3,12 +3,21 @@ function ApplicationWindow() {
 	var CurrencyView = require('ui/common/currencyView'),
 	    PinBarView = require('ui/common/pinbarView');
 	    CommentaryView = require('ui/common/commentaryView');
-		
+	    
+	var ad = require("ti.admob");
+	
+	var adView = ad.createView({
+	    publisherId:"a1511137111eee3",
+	    testing:true, 
+	    bottom: 0, 
+	    height: 50,
+	    width: Ti.Platform.displayCaps.platformWidth
+    }); 
 	//create object instance
 	var self = Ti.UI.createWindow({
 		backgroundColor:'#ffffff'
 	});
-		
+
 	//construct UI
 	var currencyView = new CurrencyView(),
             pinBarView = new PinBarView();
@@ -19,8 +28,13 @@ function ApplicationWindow() {
 	var masterContainerWindow = Ti.UI.createWindow({
 		title:'Currencies'
 	});
-	masterContainerWindow.add(currencyView);
+	currencyView.top = 0;
+	currencyView.bottom = 50;
 	
+	
+	masterContainerWindow.add(currencyView);
+	masterContainerWindow.add(adView);
+
 	//create detail view container
 	var pinBarWindow = Ti.UI.createWindow({
 		title:'Pin Bar Entry'
@@ -45,7 +59,7 @@ function ApplicationWindow() {
 	
 	var cc = require('currencycommon');
     cc.refreshCurrencies({view: currencyView});
-	
+
 	return self;
 };
 
