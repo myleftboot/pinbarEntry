@@ -152,27 +152,29 @@ function pinBarView() {
         
         function processTableClick(_args) {
           // if the rowSource is the bull indicator then switch from bull to bear
-          if (bull) {
-              positionSize.updateRow(_args.index, 
-                                     createTableRow({title: pb.BEARNAME}),
-                                     {animated : true}
-                                    );
-              bull = false;
-              pinbarVw.remove(pb.thePinBar);
-              pb.thePinBar = drawPB({bull:bull});
-              pinbarVw.add(pb.thePinBar);
+          if (_args.source.text == pb.BULLNAME || _args.source.text == pb.BEARNAME) {
+	          if (bull) {
+	              positionSize.updateRow(_args.index, 
+	                                     createTableRow({title: pb.BEARNAME}),
+	                                     {animated : true}
+	                                    );
+	              bull = false;
+	              pinbarVw.remove(pb.thePinBar);
+	              pb.thePinBar = drawPB({bull:bull});
+	              pinbarVw.add(pb.thePinBar);
+	          }
+	          else {
+	              positionSize.updateRow(_args.index, 
+	                                     createTableRow({title: pb.BULLNAME}),
+	                                     {animated : true}
+	                                    );
+	              bull = true;
+	              pinbarVw.remove(pb.thePinBar);
+	              pb.thePinBar = drawPB({bull:bull});
+	              pinbarVw.add(pb.thePinBar);
+	          }
+	          updateEntryPointIndicator({retracement: iRetracement.value});
           }
-          else {
-              positionSize.updateRow(_args.index, 
-                                     createTableRow({title: pb.BULLNAME}),
-                                     {animated : true}
-                                    );
-              bull = true;
-              pinbarVw.remove(pb.thePinBar);
-              pb.thePinBar = drawPB({bull:bull});
-              pinbarVw.add(pb.thePinBar);
-          }
-          updateEntryPointIndicator({retracement: iRetracement.value});
         }
         
         function processRetracementChange(_args) {

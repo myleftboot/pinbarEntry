@@ -10,7 +10,8 @@ function ApplicationWindow() {
 		title:'Currencies',
 		exitOnClose:true,
 		navBarHidden:false,
-		backgroundColor:'#ffffff'
+		backgroundColor:'#ffffff',
+		layout: 'vertical'
 	});
 	
 	function addMenu(win) {
@@ -27,7 +28,6 @@ function ApplicationWindow() {
 	    settingsView = new SettingsView();
 	    
 	self.add(currencyView);
-	//self.add(addMenu);
 
 	//add behavior for master view
 	currencyView.addEventListener('currencySelected', function(e) {
