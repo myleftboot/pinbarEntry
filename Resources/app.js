@@ -45,4 +45,16 @@ if (Ti.version < 1.8 ) {
 		}
 	}
 	new Window().open();
+	
+	if (osname === 'iphone') {
+		var sk = require('storekit'); 
+		// if the content requires a purchase then call the code to purchase the product
+		if (sk.canMakePayments()) {
+		   sk.requestProduct({PRODUCT:'exotic_currency',
+	            ERROR:function(e) {alert('Error'+JSON.stringify(e))},
+	            SUCCESS:function(e) {sk.askToBuy(e.PRODUCT)}
+	          });
+ 		}
+	}
+
 })();

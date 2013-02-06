@@ -12,6 +12,7 @@ copyright: Copyright (c) 2010-2012 by Appcelerator, Inc.
 # these should not be edited
 name: storekit 
 moduleid: ti.storekit
-guid: 67fdca33-590b-498d-bd4e-1fc3a8be0f37
+#guid: 67fdca33-590b-498d-bd4e-1fc3a8be0f37
+guid: EED93BEB-7F24-43E0-9C6D-2C8CBC422D48
 platform: iphone
 minsdk: 1.8.0.1

@@ -35,8 +35,8 @@
         </orientations>
     </iphone>
     <android xmlns:android="http://schemas.android.com/apk/res/android">
-    <manifest android:versionCode="1" android:versionName="1.0"/>
-    <tool-api-level>14</tool-api-level>
+        <manifest android:versionCode="1" android:versionName="1.0"/>
+        <tool-api-level>14</tool-api-level>
     </android>
     <mobileweb>
         <precache/>
@@ -51,6 +51,7 @@
         <module platform="iphone">tmm.tweet</module>
         <module platform="android">ti.admob</module>
         <module platform="iphone">ti.admob</module>
+        <module platform="iphone" version="1.6.2">ti.storekit</module>
     </modules>
     <deployment-targets>
         <target device="blackberry">false</target>

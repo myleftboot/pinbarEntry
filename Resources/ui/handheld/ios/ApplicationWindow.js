@@ -8,7 +8,7 @@ function ApplicationWindow() {
 	
 	var adView = ad.createView({
 	    publisherId:"a1511137111eee3",
-	    testing:true, 
+	    testDevices:true, 
 	    bottom: 0, 
 	    height: 50,
 	    width: Ti.Platform.displayCaps.platformWidth
