@@ -32,7 +32,7 @@ function forexCommentaryView() {
 
 	function createCommentaryRows(_args) {
 		var tabRows = [];
-		var moment = require('moment');
+		var moment = require('/moment');
 
 		for (var i in _args) {
 

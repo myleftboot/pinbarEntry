@@ -78,7 +78,12 @@ function updateCurrencies(_args) {
 		} catch (e) {
 			return;
 		}
-	} else var rates = _args.JSON.rate;
+	} else {
+		try {var rates = _args.JSON.rate;
+		} catch (e) {
+			return;
+		}
+	}
 	
 	var db = require('/currencydb');
 	for (var i in rates) {

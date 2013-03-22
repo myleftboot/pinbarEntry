@@ -1,9 +1,7 @@
 function ApplicationWindow() {
 	//declare module dependencies
-	var CurrencyView = require('ui/common/currencyView'),
-	    PinBarView = require('ui/common/pinbarView'),
-	    CommentaryView = require('ui/common/commentaryView'),
-        SettingsView = require('ui/common/settingsView');
+	var CurrencyView = require('/ui/common/currencyView'),
+	    CommentaryView = require('/ui/common/commentaryView');
         
 	//create object instance
 	var self = Ti.UI.createWindow({
@@ -13,34 +11,24 @@ function ApplicationWindow() {
 		backgroundColor:'#ffffff',
 		layout: 'vertical'
 	});
-	
-	function addMenu(win) {
-		var activity = self.activity;
-	
-		activity.onCreateOptionsMenu = function(e){
-	
-	 		var firstItem = e.menu.add({ title: 'Settings' });
-			firstItem.addEventListener("click", function(e) {self.add(settingsView)});
-		};
-	};
+
 	//construct UI
-	var currencyView = new CurrencyView(),
-	    settingsView = new SettingsView();
+	var currencyView = new CurrencyView();
 	    
 	self.add(currencyView);
 
 	//add behavior for master view
 	currencyView.addEventListener('currencySelected', function(e) {
 		//create pinbar view container
-		var pinBarView = new PinBarView();
-		var pinBarWindow = Ti.UI.createWindow({
-			title:'Pin Bar Entry',
+		var commentaryView = new CommentaryView();
+		var commentaryWindow = Ti.UI.createWindow({
+			title:'Add Comments',
 			navBarHidden:false,
 			backgroundColor:'#ffffff'
 		});
-		pinBarWindow.add(pinBarView);
-		pinBarView.fireEvent('currencySelected',e);
-		pinBarWindow.open();
+		commentaryWindow.add(commentaryView);
+		commentaryView.fireEvent('currencySelected',e);
+		commentaryWindow.open();
 	});
 	
 	currencyView.addEventListener('currencyRefresh', function(e) {
