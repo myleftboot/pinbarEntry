@@ -6,7 +6,7 @@
     <property name="acs-oauth-secret-development" type="string">nRh5Q3GMMm3wJdojiSOJKg2H0V8BWrWN</property>
     <property name="acs-oauth-key-development" type="string">Csq8KsHVKLizSlBwppdpIDB4kui2AmkZ</property>
     <property name="acs-api-key-development" type="string">Ao8IaQ8UrhKa2lgER12xwrQiXKnTpI8s</property>
-    <id>com.ccs.pinbar.entry</id>
+    <id>com.ccs.pinbar.entry2</id>
     <name>pinbarEntry</name>
     <version>1.0</version>
     <publisher>Darren</publisher>
@@ -35,7 +35,9 @@
         </orientations>
     </iphone>
     <android xmlns:android="http://schemas.android.com/apk/res/android">
-        <manifest android:versionCode="1" android:versionName="1.0"/>
+        <manifest android:versionCode="1" android:versionName="1.0">
+            <uses-permission android:name="com.android.vending.BILLING"/>
+        </manifest>
         <tool-api-level>14</tool-api-level>
     </android>
     <mobileweb>
@@ -52,6 +54,7 @@
         <module platform="android">ti.admob</module>
         <module platform="iphone">ti.admob</module>
         <module platform="iphone" version="1.6.2">ti.storekit</module>
+        <module platform="android">ti.inappbilling</module>
     </modules>
     <deployment-targets>
         <target device="blackberry">false</target>

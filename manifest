@@ -1,9 +1,9 @@
-#appname: pinbarEntry
-#appid: com.ccs.pinbar.entry
-#type: mobile
-#guid: b2b9bd71-76f7-4de8-a5dd-a76618ad3740
-#version: 1.0
-#publisher: not specified
-#url: not specified
-#image: appicon.png
-#desc: not specified
+#appname:pinbarEntry
+#appid:com.ccs.pinbar.entry2
+#type:mobile
+#guid:b2b9bd71-76f7-4de8-a5dd-a76618ad3740
+#version:1.0
+#publisher:Darren
+#url:http://darren.cope.name
+#image:appicon.png
+#desc:not specified

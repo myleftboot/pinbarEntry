@@ -56,5 +56,19 @@ if (Ti.version < 1.8 ) {
 	          });
  		}
 	}
+	if (osname === 'android') {
+		var inApp = require('ti.inappbilling');
+		
+		// set up the event listeners before startin the connetion
+		// there are a few events you could isten to but for this simple example we just need to know when we connect
+		inApp.addEventListener(inApp.ON_CONNECT_EVENT, function(e){
+			// we have connected request the product
+			inApp.requestPurchase({
+				productId: 'android.test.purchased'//'exotic.currencies'
+			});
+		});
+		
+		inApp.startBillingService();
+	}
 
 })();

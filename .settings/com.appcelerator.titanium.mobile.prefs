@@ -1,0 +1,6 @@
+android/alias=pinbarEntry
+android/keystore=/Users/Darren/Work/keystore/pinbarEntry.keystore
+android/output_location=/Users/Darren/Work/pinbarEntry
+android/recent_output=/Users/Darren/Work/pinbarEntry
+android/sdk=Google APIs (Android 4.0.3)
+eclipse.preferences.version=1
